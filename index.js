@@ -1,11 +1,11 @@
 
-// import express
-const http = require('http'),
-  express = require ('express'),
-  bodyParser = require('body-parser')
+const
+  express = require ('express'), //import express framework
+  bodyParser = require('body-parser'), //middleware to parse request bodies before handlers
   morgan = require ('morgan'); //Logging middleware for Express
 
-const app = express();
+const
+  app = express(); //variable to encapsulates Express functionality
 
 let topMovies = [
   {
@@ -60,7 +60,7 @@ let topMovies = [
   }
 ];
 
-app.use(morgan('common'));
+app.use(morgan('common')); //morgan middleware common logger format
 
 app.get('/', (req, res) => {
   res.send('Welcome to my app!');
@@ -70,9 +70,9 @@ app.get('/movies', (req, res) => {
   res.json(topMovies);
 });
 
-app.use(express.static('public'));
+app.use(express.static('public')); //express function to route all requests for static files to files within certain folder on server
 
-app.use((err,req,res,next) => {
+app.use((err,req,res,next) => { //express error handling middleware (whatever unexpected errors)
     console.error(err.stack);
     res.status(500).send('Something broken!');
 });
