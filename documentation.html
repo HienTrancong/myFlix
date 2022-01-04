@@ -4,6 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
     <title>Documentation</title>
   </head>
   <body>
@@ -12,5 +13,88 @@
 application will provide users with access to information about different
 movies, directors, and genres. Users will be able to sign up, update their
 personal information, and create a list of their favorite movies.</p>
+    <div>
+      <h2>API</h2>
+      <table class="apiTable">
+        <tr>
+          <th>Business logic</th>
+          <th>URL</th>
+          <th>HTTP Method</th>
+          <th>Request body data format</th>
+          <th>Reponse body data format</th>
+        </tr>
+        <tr>
+          <td>Get a list of all movies</td>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about all movies</td>
+        </tr>
+        <tr>
+          <td>Get data about a movie by title</td>
+          <td>/movies/[title]</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about a movie. <br>
+            Example:<br>
+              &ensp;{<br>
+              &emsp;title: 'Slalom',<br>
+              &emsp;rank: 4,<br>
+              &emsp;director: 'Charlène Favier',<br>
+              &emsp;genre: ['Drama','Narrative']<br>
+              &ensp;}
+          </td>
+        </tr>
+        <tr>
+          <td>Get data about a genre by genreName</td>
+          <td>/genres/[genreName] </td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about a genre</td>
+        </tr>
+        <tr>
+          <td>Get data about a director by directorname</td>
+          <td>/directors/[directorName]</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about a director</td>
+        </tr>
+        <tr>
+          <td>Add new user</td>
+          <td>/users</td>
+          <td>POST</td>
+          <td>JSON object holding data about the user to add</td>
+          <td>JSON object holding data about the new user</td>
+        </tr>
+        <tr>
+          <td>Update user info (userName)</td>
+          <td>/users/[userName]</td>
+          <td>PUT</td>
+          <td>JSON object holding data about information need to be updated</td>
+          <td>JSON object holding data about the user</td>
+        </tr>
+        <tr>
+          <td>Add a movie to user's list of favorites</td>
+          <td>/favourites/[userName]/[movieName]</td>
+          <td>POST</td>
+          <td>None</td>
+          <td>JSON object about updated list of user's favorite movies</td>
+        </tr>
+        <tr>
+          <td>Remove a movie from a user's list of favorites </td>
+          <td>/favourites/[userName]/[movieName]</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>JSON object about updated list of user's favorite movies</td>
+        </tr>
+        <tr>
+          <td>Remove a user by userName</td>
+          <td>/users/[userName]</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>A text message indicate the user with userName has been deleted</td>
+        </tr>
+      </table>
+    </div>
   </body>
 </html>
