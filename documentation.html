@@ -46,6 +46,27 @@ personal information, and create a list of their favorite movies.</p>
           </td>
         </tr>
         <tr>
+          <td>Get data about all movies of certain genre</td>
+          <td>/movies/[genreName]</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about all movies of certain genre. </td>
+        </tr>
+        <tr>
+          <td>Get data about all movies of certain genre and of a certain director</td>
+          <td>/movies/[genreName]/[directorName]</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about all movies of certain genre and of a certain diretor. </td>
+        </tr>
+        <tr>
+          <td>Update description of movie</td>
+          <td>/movies/description/[title]</td>
+          <td>PUT</td>
+          <td>JSON object holding data about information of description of a movie need to be updated</td>
+          <td>JSON object holding data about a movie by title with updated description. </td>
+        </tr>
+        <tr>
           <td>Get data about a genre by genreName</td>
           <td>/genres/[genreName] </td>
           <td>GET</td>
@@ -58,6 +79,13 @@ personal information, and create a list of their favorite movies.</p>
           <td>GET</td>
           <td>None</td>
           <td>JSON object holding data about a director</td>
+        </tr>
+        <tr>
+          <td>Update bio of a director by directorname</td>
+          <td>/directors/bio/[directorName]</td>
+          <td>PUT</td>
+          <td>JSON object holding data about information of bio need to be updated</td>
+          <td>JSON object holding data about a director including updated bio</td>
         </tr>
         <tr>
           <td>Add new user</td>
