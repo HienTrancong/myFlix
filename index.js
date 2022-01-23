@@ -1,79 +1,25 @@
 
-const
-  express = require ('express'), //import express framework
-  bodyParser = require('body-parser'), //middleware to parse request bodies before handlers
-  morgan = require ('morgan'); //Logging middleware for Express
+const express = require ('express'); //import express framework
+const app = express(); //variable to encapsulates Express functionality to app as instance
 
-const
-  app = express(); //variable to encapsulates Express functionality
+const bodyParser = require('body-parser'); //middleware to parse request bodies before handlers
+app.use(bodyParser.json()); //use bodyPArser middleware
 
-// Array of objects containing data about top10 movies
-// Credit to https://editorial.rottentomatoes.com/guide/2021-best-movies/
-let topMovies = [
-  {
-    title: '76 Days',
-    rank: 1,
-    director: 'Hao Wu, Weixi Chen',
-    genre: ['Documentary','Drama']
-  },
-  {
-    title: 'Drive My Car',
-    rank: 2,
-    director: 'Ryûsuke Hamaguchi',
-    genre: 'Drama'
-  },
-  {
-    title: 'Quo Vadis, Aida?',
-    rank: 3,
-    director: 'Jasmila Zbanic',
-    genre: ['War','Drama']
-    },
-  {
-    title: 'Slalom',
-    rank: 4,
-    director: 'Charlène Favier',
-    genre: ['Drama','Narrative']
-  },
-  {
-    title: 'The Worst Person In The World',
-    rank: 5,
-    director: 'Joachim Trier',
-    genre: ['Romance','Drama']
-  },
-  {
-    title: 'Parallel Mothers',
-    rank: 6,
-    director: 'Pedro Almodóvar',
-    genre: 'Drama'
-  },
-  {
-    title: 'Luzzu',
-    rank: 7,
-    director: 'Alex Camilleri',
-    genre: 'Drama'
-  },
-  {
-    title: 'Sabaya',
-    rank: 8,
-    director: 'Hogir Hirori',
-    genre: 'Documentary'
-  },
-  {
-    title: 'Mayor',
-    rank: 9,
-    director: 'David Osit',
-    genre: 'Documentary'
-  },
-  {
-    title: 'Paper Spiders',
-    rank: 10,
-    director: 'Inon Shampanier',
-    genre: 'Drama'
-  },
-];
+const uuid = require ('uuid'); //package to generate Universal Unique ID
 
-//morgan middleware common logger format
-app.use(morgan('common')); 
+const morgan = require ('morgan'); //Express's Logging middleware
+app.use(morgan('common')); //morgan middleware common logger format
+
+const mongoose = require('mongoose'); // mongoose package
+const Models = require('./models.js'); // import models file
+const Movies = Models.Movie; //import model Movie
+const Users = Models.User; //import model Users
+
+
+mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', { //method to connect mongoose to MongoDB
+  useNewUrlParser: true, 
+  useUnifiedTopology: true
+});
 
 // Welcome to page
 app.get('/', (req, res) => {
@@ -82,58 +28,178 @@ app.get('/', (req, res) => {
 
 // GET list of all movies
 app.get('/movies', (req, res) => {
-  res.json(topMovies);
+  Movies.find()
+    .then((movies) => {
+      res.status(201).json(movies);
+    })
+    .catch((err)=> {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // GET data about a movie by title
 app.get('/movies/:title', (req, res) => {
-  res.json(topMovies.find((movie) => {
-    return movie.title === req.params.title
-  }));
+  Movies.findOne({Title: req.params.title })
+  .then ((movie) => {
+    res.json(movie);
+  })
+  .catch ((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
 });
 
 // GET  data about a genre by genreName
-app.get('/genres/:genreName', (req, res) => {
-  res.send('Sucessfully GET JSON object about data of a genre');
+app.get('/genre/:genreName', (req, res) => {
+  Movies.findOne({'Genre.Name': req.params.genreName })
+  .then ((movie) => {
+    res.json(movie.Genre);
+  })
+  .catch ((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
 });
 
-// GET data about a director by directorname
-app.get('/directors/:directorName', (req, res) => {
-  res.send('Sucessfully GET JSON object about data of a director');
+// GET  data about a director by name
+app.get('/director/:directorName', (req, res) => {
+  Movies.findOne({'Director.Name': req.params.directorName })
+  .then ((movie) => {
+    res.json(movie.Director);
+  })
+  .catch ((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
+});
+
+// GET list of all users
+app.get('/users', (req, res) => {
+  Users.find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err)=> {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // ADD new user
-app.post('/users', (req, res) => {
-  res.send('Sucessfully ADD a new user');
-});
+  // Expect JSON in this format
+  // {
+  //   Username: String,
+  //   Password: String,
+  //   Email: String,
+  //   Birthday: Date
+  // }
 
-// UPDATE user info
-app.put('/users/:userName', (req, res) => {
-  res.send('Sucessfully UPDATE data of a user');
-});
+ app.post('/users', (req, res) => {
+  Users.findOne({ Username: req.body.Username })
+  .then((user) => {
+    if (user) { 
+      return res.status(400).send(req.body.Username + 'already exist');
+    } else { Users.create({
+        Username: req.body.Username, 
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+        })
+      .then((user) => {res.status(201).json(user)})
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      }) 
+    }
+  }) 
+  .catch((error) => {
+    console.error(Error);
+    res.status(500).send('Error: ' + error);
+  });
+ });
 
-// ADD a movie to user's list of favorites
-app.post('/favourites/:userName/:movieName', (req, res) => {
-  res.send('Sucessfully ADD a movie to user\'s favorite movies list');
-});
-
-// DELETE a movie from a user's list of favorites
-app.delete('/favourites/:userName/:movieName', (req, res) => {
-  res.send('Sucessfully DELETE data of a movie from user\'s favorite movies list');
+// Update user information by username
+/*
+ Username: String, (required)
+ Password: String,(required)
+ Email: String,(required)
+ Birthday: Date
+*/
+ app.put( '/users/:Username', (req, res) => {
+  Users.findOneAndUpdate(
+    {Username: req.params.Username }, 
+    {$set: {
+      Username: req.body.Username,
+      Password: req.body.Password,
+      Email: req.body.Email,
+      Birthday: req.body.Birthday
+      }
+    },
+    {new: true}, //Option, make sure the updated document is returned
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);  
+      }
+    });
 });
 
 // DELETE a user by userName
-app.delete('/users/:userName', (req, res) => {
-  res.send('Sucessfully REMOVE the user');
+app.delete('/users/:Username', (req, res) => {
+  Users.findOneAndRemove
+  ({ Username: req.params.Username})
+  .then( (user) => {
+    if(!user) {
+      res.status(400).send(req.params.Username + ' was not found.');
+    } else {
+      res.status(200).send(req.params.Username + ' is deleted.')
+    }
+  })
+  .catch( (err) => {
+    console.error(err);
+    res.status(500).send('Error: '+ err);
+  });
 });
 
-//express function to route all requests for static files to files within certain folder on server
-app.use(express.static('public')); 
+//  ADD a movie to user's list of favorites
+app.post('/users/:userName/movies/:movieID', (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.userName },
+    { $push: {
+        FavoriteMovies: req.params.movieID
+      }
+    },
+    {new: true},
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: '+ err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
+});
 
-//express error handling middleware (whatever unexpected errors)
-app.use((err,req,res,next) => { 
-    console.error(err.stack);
-    res.status(500).send('Something broken!');
+//  DELETE a movie to user's list of favorites
+app.delete('/users/:userName/movies/:movieID', (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.userName },
+    { $pull: {
+        FavoriteMovies: req.params.movieID
+      }
+    },
+    {new: true},
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: '+ err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
 });
 
 // Listener

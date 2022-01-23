@@ -32,88 +32,107 @@ personal information, and create a list of their favorite movies.</p>
         </tr>
         <tr>
           <td>Get data about a movie by title</td>
-          <td>/movies/[title]</td>
+          <td>/movies/[Title]</td>
           <td>GET</td>
           <td>None</td>
-          <td>JSON object holding data about a movie. <br>
-            Example:<br>
-              &ensp;{<br>
-              &emsp;title: 'Slalom',<br>
-              &emsp;rank: 4,<br>
-              &emsp;director: 'Charlène Favier',<br>
-              &emsp;genre: ['Drama','Narrative']<br>
+          <td>JSON object holding data about a movie. Example:<br> 
+              &nbsp;{<br>
+              &emsp;"_id": "61db...",<br>
+              &emsp;"Title": "For Those Who Can Tell No Tales",<br>
+              &emsp;"Description": "An Australian tourist discovers...",<br>
+              &emsp;"Genre": { <br>
+              &emsp;&emsp;"Name": "Drama",<br>
+              &emsp;&emsp;"Description": "In film and television, drama is..."}<br>
+              &emsp;"Director": { <br>
+              &emsp;&emsp;"Name":   "Jasmila Zbanic",<br>
+              &emsp;&emsp;"Bio": "Jasmila Žbanić is a..."} <br>
+              &emsp;&emsp;"Birth": "1974-.."} <br>
+              &emsp;&emsp;"Death": null}, <br>
+              &emsp;"Actor": [], <br>
+              &emsp;"ImagePath": "https://images...",<br>
+              &emsp;"Featured": false<br>
               &ensp;}
           </td>
         </tr>
         <tr>
-          <td>Get data about all movies of certain genre</td>
-          <td>/movies/[genreName]</td>
+          <td>Get data about a genre by genre name</td>
+          <td>/genre/[genreName]</td>
           <td>GET</td>
           <td>None</td>
-          <td>JSON object holding data about all movies of certain genre. </td>
-        </tr>
-        <tr>
-          <td>Get data about all movies of certain genre and of a certain director</td>
-          <td>/movies/[genreName]/[directorName]</td>
-          <td>GET</td>
-          <td>None</td>
-          <td>JSON object holding data about all movies of certain genre and of a certain diretor. </td>
-        </tr>
-        <tr>
-          <td>Update description of movie</td>
-          <td>/movies/description/[title]</td>
-          <td>PUT</td>
-          <td>JSON object holding data about information of description of a movie need to be updated</td>
-          <td>JSON object holding data about a movie by title with updated description. </td>
-        </tr>
-        <tr>
-          <td>Get data about a genre by genreName</td>
-          <td>/genres/[genreName] </td>
-          <td>GET</td>
-          <td>None</td>
-          <td>JSON object holding data about a genre</td>
+          <td>JSON object holding data about a of certain genre. Example: <br>
+          &emsp;{ <br>
+            &emsp;&emsp;"Name": "Drama",<br>
+            &emsp;&emsp;"Description": "In film and television, drama is..."<br>
+          &emsp;}
+          </td>
         </tr>
         <tr>
           <td>Get data about a director by directorname</td>
-          <td>/directors/[directorName]</td>
+          <td>/director/[directorName]</td>
           <td>GET</td>
           <td>None</td>
-          <td>JSON object holding data about a director</td>
+          <td>JSON object holding data about a of certain genre. Example: <br>
+            &emsp;{ <br>
+              &emsp;&emsp;"Name": "Jasmila Zbanic",<br>
+              &emsp;&emsp;"Bio": "Jasmila Žbanić is a..."<br>
+              &emsp;&emsp;"Birth": "1974-.."} <br>
+              &emsp;&emsp;"Death": null} <br>
+            &emsp;}
         </tr>
-        <tr>
-          <td>Update bio of a director by directorname</td>
-          <td>/directors/bio/[directorName]</td>
-          <td>PUT</td>
-          <td>JSON object holding data about information of bio need to be updated</td>
-          <td>JSON object holding data about a director including updated bio</td>
-        </tr>
-        <tr>
           <td>Add new user</td>
           <td>/users</td>
           <td>POST</td>
-          <td>JSON object holding data about the user to add</td>
+          <td> Expect JSON object holding data about the user to add in this format: <br>
+            { <br>
+            "Username": String,<br>
+            "Password": String,<br>
+            "Email": String,<br>
+            "Birthday": Date<br>
+            } <br><br>
+            Example: <br>
+            {<br>
+            "Username": "test",<br>
+            "Password": "testpass",<br>
+            "Email": "test@hotmail.com",<br>
+            "Birthday": "2000-05-01" <br>
+            }<br>
+          </td>
           <td>JSON object holding data about the new user</td>
         </tr>
         <tr>
           <td>Update user info (userName)</td>
           <td>/users/[userName]</td>
           <td>PUT</td>
-          <td>JSON object holding data about information need to be updated</td>
-          <td>JSON object holding data about the user</td>
+          <td> Expect JSON object holding data about the user to add in this format: <br>
+            { <br>
+            "Username": String, (required)<br>
+            "Password": String, (required)<br>
+            "Email": String, (required)<br>
+            "Birthday": Date<br>
+            } <br><br>
+            Example: <br>
+            {<br>
+            "Username": "test",<br>
+            "Password": "testpassupdated",<br>
+            "Email": "test@hotmail.comupdated",<br>
+            "Birthday": "2000-05-01" <br>
+            }<br>
+          </td>
+          <td>JSON object holding updated data about the user</td>
         </tr>
         <tr>
-          <td>Add a movie to user's list of favorites</td>
-          <td>/favourites/[userName]/[movieName]</td>
+          <td>Add a movie by movie ID to user's list of favorites</td>
+          <td>/users/[userName]/movies/[movieID]</td>
           <td>POST</td>
           <td>None</td>
-          <td>JSON object about updated list of user's favorite movies</td>
+          <td>JSON object about user information with updated list of user's favorite movies</td>
         </tr>
         <tr>
-          <td>Remove a movie from a user's list of favorites </td>
-          <td>/favourites/[userName]/[movieName]</td>
+          <td>Remove a movie by movie ID from a user's list of favorites</td>
+          <td>/users/[userName]/movies/[movieID]</td>
           <td>DELETE</td>
           <td>None</td>
-          <td>JSON object about updated list of user's favorite movies</td>
+          <td>JSON object about user information with updated list of user's favorite movies</td>
         </tr>
         <tr>
           <td>Remove a user by userName</td>
