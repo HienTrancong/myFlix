@@ -1,33 +1,45 @@
 
-const express = require ('express'); //import express framework
-const app = express(); //variable to encapsulates Express functionality to app as instance
 
-const bodyParser = require('body-parser'); //middleware to parse request bodies before handlers
-app.use(bodyParser.json()); //use bodyPArser middleware
+const express = require ('express'); //import express framework, with app variable to encapsulates Express functionality to app as instance
+const morgan = require ('morgan'); //express's middleware 'morgan' to log changes, using 'common' format
+const bodyParser = require('body-parser');//express's middleware 'bodyParser' to parse request bodies before handlers, parse json format
+const app = express(); 
 
 const uuid = require ('uuid'); //package to generate Universal Unique ID
-
-const morgan = require ('morgan'); //Express's Logging middleware
-app.use(morgan('common')); //morgan middleware common logger format
 
 const mongoose = require('mongoose'); // mongoose package
 const Models = require('./models.js'); // import models file
 const Movies = Models.Movie; //import model Movie
 const Users = Models.User; //import model Users
 
-
 mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', { //method to connect mongoose to MongoDB
   useNewUrlParser: true, 
   useUnifiedTopology: true
 });
+
+
+
+app.use(bodyParser.urlencoded({extended: true})); //?
+
+
+
+let auth = require('./auth')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
+const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
+require ('./passport'); //call passport file
+
+
 
 // Welcome to page
 app.get('/', (req, res) => {
   res.send('Welcome to my app!');
 });
 
+// Documentation
+
 // GET list of all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', 
+  passport.authenticate('jwt', {session: false}), 
+  (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
