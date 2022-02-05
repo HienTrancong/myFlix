@@ -16,14 +16,14 @@ let generateJWTToken = (user) => { //function to create a JWT based on username 
 //POST login.
 module.exports = (router) => {
     router.post('/login', (req, res) => {
-        passport.authenticate('local', {session: false}, (error, user, info) => { 
+        passport.authenticate('local', {session:false}, (error, user, info) => { 
             if (error || !user) {
                 return res.status(400).json({
                     message:'Something is not right',
                     user: user
                 });
             }
-            req.login(user,{ session: false }, (error) => {
+            req.login(user, { session:false }, (error) => {
                 if (error) {
                     res.send(error);
                 }

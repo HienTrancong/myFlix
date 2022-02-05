@@ -16,37 +16,32 @@ let Users = Models.User;
 let JWTStrategy = passportJWT.Strategy; 
 let ExtractJWT = passportJWT.ExtractJwt; 
 
-passport.use(new LocalStrategy (
-    //default parameters usernameField; passwordField
-    //the fields define the name of properties in POST body sent to server
-    {usernameField: 'Username', 
-    passwordField: 'Password'},
-    (username, password, callback) => {
+//default parameters usernameField; passwordField
+//the fields define the name of properties in POST body sent to server
+passport.use(new LocalStrategy({
+    usernameField: 'Username', 
+    passwordField: 'Password'
+    }, (username, password, callback) => {
         console.log(username + ' ' + password);
         Users.findOne({Username: username}, (error, user) => {
-                //if error occur, error is passed to the callback
-                if (error) { 
-                    console.log(error);
-                    return callback(error);
-                }
-                //if user can't be found in db, message is passed to to the callback
-                if (!user) { 
-                    console.log('incorrect username');
-                    return callback(null, false, {message: 'Incorrect username or password'}); //? format of parameter
-                }
-                console.log('finished');
-                // if there is a user matching, callback provide a user
-                return callback(null,user);
-        })
-    }
-));
+            if (error) {  //if error occur, error is passed to the callback
+                console.log(error);
+                return callback(error);
+            }
+            if (!user) { //if user can't be found in db, message is passed to to the callback
+                console.log('incorrect username');
+                return callback(null, false, {message: 'Incorrect username or password'}); //? format of parameter
+            }
+        console.log('finished');// if there is a user matching, callback provide a user
+        return callback(null,user);
+    });
+}));
 
-passport.use(new JWTStrategy ({
-    //JWT is extracted from header of HTTP request, this JWT is called "bearer token"
+//JWT is extracted from header of HTTP request, this JWT is called "bearer token"
     //secret key to verify the signature of the JWT, this signature verifies the sender identity, also to verify that the JWT hasn'T been altered   
+passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(), 
-    secretOrKey: 'your_jwt_secret'
-    }, (jwtPayload, callback) => {
+    secretOrKey: 'your_jwt_secret'}, (jwtPayload, callback) => {
         return Users.findById(jwtPayload._id) //Mongoose function to find a document by _id
             .then((user) => {
                 return callback(null, user);
@@ -54,5 +49,4 @@ passport.use(new JWTStrategy ({
             .catch((error) => {
                 return callback(error);
             });
-    }
-));
+}));

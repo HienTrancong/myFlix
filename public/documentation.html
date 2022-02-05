@@ -4,6 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css\styles.css">
     <title>Documentation</title>
   </head>
   <body>
@@ -12,5 +13,135 @@
 application will provide users with access to information about different
 movies, directors, and genres. Users will be able to sign up, update their
 personal information, and create a list of their favorite movies.</p>
+    <div>
+      <h2>API</h2>
+      <table class="apiTable">
+        <tr>
+          <th>Business logic</th>
+          <th>URL</th>
+          <th>HTTP Method</th>
+          <th>Request body data format</th>
+          <th>Reponse body data format</th>
+        </tr>
+        <tr>
+          <td>Get a list of all movies</td>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about all movies</td>
+        </tr>
+        <tr>
+          <td>Get data about a movie by title</td>
+          <td>/movies/[Title]</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about a movie. Example:<br> 
+              &nbsp;{<br>
+              &emsp;"_id": "61db...",<br>
+              &emsp;"Title": "For Those Who Can Tell No Tales",<br>
+              &emsp;"Description": "An Australian tourist discovers...",<br>
+              &emsp;"Genre": { <br>
+              &emsp;&emsp;"Name": "Drama",<br>
+              &emsp;&emsp;"Description": "In film and television, drama is..."}<br>
+              &emsp;"Director": { <br>
+              &emsp;&emsp;"Name":   "Jasmila Zbanic",<br>
+              &emsp;&emsp;"Bio": "Jasmila Žbanić is a..."} <br>
+              &emsp;&emsp;"Birth": "1974-.."} <br>
+              &emsp;&emsp;"Death": null}, <br>
+              &emsp;"Actor": [], <br>
+              &emsp;"ImagePath": "https://images...",<br>
+              &emsp;"Featured": false<br>
+              &ensp;}
+          </td>
+        </tr>
+        <tr>
+          <td>Get data about a genre by genre name</td>
+          <td>/genre/[genreName]</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about a of certain genre. Example: <br>
+          &emsp;{ <br>
+            &emsp;&emsp;"Name": "Drama",<br>
+            &emsp;&emsp;"Description": "In film and television, drama is..."<br>
+          &emsp;}
+          </td>
+        </tr>
+        <tr>
+          <td>Get data about a director by directorname</td>
+          <td>/director/[directorName]</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about a of certain genre. Example: <br>
+            &emsp;{ <br>
+              &emsp;&emsp;"Name": "Jasmila Zbanic",<br>
+              &emsp;&emsp;"Bio": "Jasmila Žbanić is a..."<br>
+              &emsp;&emsp;"Birth": "1974-.."} <br>
+              &emsp;&emsp;"Death": null} <br>
+            &emsp;}
+        </tr>
+          <td>Add new user</td>
+          <td>/users</td>
+          <td>POST</td>
+          <td> Expect JSON object holding data about the user to add in this format: <br>
+            { <br>
+            "Username": String,<br>
+            "Password": String,<br>
+            "Email": String,<br>
+            "Birthday": Date<br>
+            } <br><br>
+            Example: <br>
+            {<br>
+            "Username": "test",<br>
+            "Password": "testpass",<br>
+            "Email": "test@hotmail.com",<br>
+            "Birthday": "2000-05-01" <br>
+            }<br>
+          </td>
+          <td>JSON object holding data about the new user</td>
+        </tr>
+        <tr>
+          <td>Update user info (userName)</td>
+          <td>/users/[userName]</td>
+          <td>PUT</td>
+          <td> Expect JSON object holding data about the user to add in this format: <br>
+            { <br>
+            "Username": String, (required)<br>
+            "Password": String, (required)<br>
+            "Email": String, (required)<br>
+            "Birthday": Date<br>
+            } <br><br>
+            Example: <br>
+            {<br>
+            "Username": "test",<br>
+            "Password": "testpassupdated",<br>
+            "Email": "test@hotmail.comupdated",<br>
+            "Birthday": "2000-05-01" <br>
+            }<br>
+          </td>
+          <td>JSON object holding updated data about the user</td>
+        </tr>
+        <tr>
+          <td>Add a movie by movie ID to user's list of favorites</td>
+          <td>/users/[userName]/movies/[movieID]</td>
+          <td>POST</td>
+          <td>None</td>
+          <td>JSON object about user information with updated list of user's favorite movies</td>
+        </tr>
+        <tr>
+          <td>Remove a movie by movie ID from a user's list of favorites</td>
+          <td>/users/[userName]/movies/[movieID]</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>JSON object about user information with updated list of user's favorite movies</td>
+        </tr>
+        <tr>
+          <td>Remove a user by userName</td>
+          <td>/users/[userName]</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>A text message indicate the user with userName has been deleted</td>
+        </tr>
+      </table>
+    </div>
   </body>
 </html>
