@@ -1,6 +1,8 @@
 
 
 const express = require ('express'); //import express framework, with app variable to encapsulates Express functionality to app as instance
+const cors = require ('cors');
+const {check, validationResult} = require('express-validator') //?
 const morgan = require ('morgan'); //express's middleware 'morgan' to log changes, using 'common' format
 const bodyParser = require('body-parser');//express's middleware 'bodyParser' to parse request bodies before handlers, parse json format
 const app = express(); 
@@ -15,6 +17,7 @@ const Users = Models.User; //import model Users
  //method to connect mongoose to MongoDB
 mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {useNewUrlParser: true, useUnifiedTopology: true});
 
+app.use(cors());
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true})); //?
@@ -105,14 +108,28 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
   //   Birthday: Date
   // }
 
- app.post('/users', (req, res) => {
-  Users.findOne({ Username: req.body.Username })
+ app.post('/users',
+  //back-end validation logic ?
+  [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does now appear to be valid').isEmail(),
+  ],
+  (req, res) => {
+  // error-handling function, if any error send a JSON object as HTTP response ?
+  let errors = validationResult(req); 
+  if (!errors.isEmpty()) {
+    return res.status(422).json({error: errors.array()});
+  }
+  let hashedPassword = Users.hashPassword(req.body.Password); //hash password entered by user before storing in MongoDB
+  Users.findOne({ Username: req.body.Username }) //Search to see if user with requested username already exists
   .then((user) => {
     if (user) { 
       return res.status(400).send(req.body.Username + 'already exist');
     } else { Users.create({
         Username: req.body.Username, 
-        Password: req.body.Password,
+        Password: hashedPassword,
         Email: req.body.Email,
         Birthday: req.body.Birthday
         })
@@ -136,7 +153,21 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
  Email: String,(required)
  Birthday: Date
 */
- app.put('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
+ app.put('/users/:Username', 
+  //back-end validation logic ?
+  [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does now appear to be valid').isEmail(),
+  ],
+  (req, res) => {
+  // error-handling function, if any error send a JSON object as HTTP response ?
+  let errors = validationResult(req); 
+  if (!errors.isEmpty()) {
+    return res.status(422).json({error: errors.array()});
+  }
+ passport.authenticate('jwt', {session: false}), (req, res) => {
   Users.findOneAndUpdate(
     {Username: req.params.Username }, 
     {$set: {
@@ -213,6 +244,7 @@ app.delete('/users/:userName/movies/:movieID', passport.authenticate('jwt', {ses
 });
 
 // Listener
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+  console.log('Listening on Port ' + port);
 });

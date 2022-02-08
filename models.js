@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'); //mongoose package
+const bcrypt = require('bcrypt'); //Node.js moduleto hash password
 
 // Define Schema for Movies collection
 let movieSchema = mongoose.Schema({
@@ -29,6 +30,17 @@ let userSchema = mongoose.Schema({
     Birthday: Date,
     FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie'}]
 });
+
+//function to hash password
+userSchema.statics.hashPassword = (password) => {
+    return bcrypt.hashSync(password, 10);
+};
+
+//function to compare submitted password with hashed password stored in the database
+// no arrow function (for instance methods), this refer to actual user document rather than .methods
+userSchema.methods.validatePassword = function(password) {
+    return bcrypt.compareSync(password, this.Password);
+};
 
 // Creating models that use the schemas
 
