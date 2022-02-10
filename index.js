@@ -14,8 +14,12 @@ const Models = require('./models.js'); // import models file
 const Movies = Models.Movie; //import model Movie
 const Users = Models.User; //import model Users
 
- //method to connect mongoose to MongoDB
-mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {useNewUrlParser: true, useUnifiedTopology: true});
+//method to connect mongoose to local MongoDB
+// mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {useNewUrlParser: true, useUnifiedTopology: true});
+
+//method to connect mongoose to MongoDB Atlas database
+mongoose.connect(process.env.CONNECTION_URI, {useNewUrlParser: true, useUnifiedTopology: true});
+
 
 app.use(cors());
 app.use(morgan('common'));
