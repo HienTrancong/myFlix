@@ -1,5 +1,3 @@
-
-
 const express = require ('express'); //import express framework, with app variable to encapsulates Express functionality to app as instance
 const morgan = require ('morgan'); //express's middleware 'morgan' to log changes, using 'common' format
 const bodyParser = require('body-parser');//express's middleware 'bodyParser' to parse request bodies before handlers, parse json format
@@ -29,7 +27,6 @@ app.use(cors());
 let auth = require('./auth')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
 require ('./passport.js'); //call passport file
-
 
 
 // Welcome to page
@@ -246,6 +243,6 @@ app.delete('/users/:userName/movies/:movieID', passport.authenticate('jwt', {ses
 
 // Listener
 const port = process.env.PORT || 8080;
-app.listen(port,'0.0.0.0',() => {
+app.listen(port, '0.0.0.0',() => {
   console.log('Listening on Port ' + port);
 });
