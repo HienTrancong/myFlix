@@ -1,18 +1,22 @@
 
 
 const express = require ('express'); //import express framework, with app variable to encapsulates Express functionality to app as instance
-const cors = require ('cors');
-const {check, validationResult} = require('express-validator') //?
 const morgan = require ('morgan'); //express's middleware 'morgan' to log changes, using 'common' format
 const bodyParser = require('body-parser');//express's middleware 'bodyParser' to parse request bodies before handlers, parse json format
 const app = express(); 
 
 const uuid = require ('uuid'); //package to generate Universal Unique ID
 
+const {check, validationResult} = require('express-validator') //?
+
 const mongoose = require('mongoose'); // mongoose package
 const Models = require('./models.js'); // import models file
 const Movies = Models.Movie; //import model Movie
 const Users = Models.User; //import model Users
+
+app.use(morgan('common'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true})); //?
 
 //method to connect mongoose to local MongoDB
 // mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {useNewUrlParser: true, useUnifiedTopology: true});
@@ -20,13 +24,8 @@ const Users = Models.User; //import model Users
 //method to connect mongoose to MongoDB Atlas database
 mongoose.connect(process.env.CONNECTION_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
-
+const cors = require ('cors');
 app.use(cors());
-app.use(morgan('common'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true})); //?
-
-
 let auth = require('./auth')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
 require ('./passport.js'); //call passport file
@@ -40,7 +39,7 @@ app.get('/', (req, res) => {
 
 // Documentation
 app.get('/documentation',(req, res) => {
-  res.sendfile('/public/documentation.html', {root:__dirname})
+  res.sendFile('/public/documentation.html', {root:__dirname})
 });
 
 //1. GET list of all movies
@@ -119,8 +118,7 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does now appear to be valid').isEmail(),
-  ],
-  (req, res) => {
+  ], (req, res) => {
   // error-handling function, if any error send a JSON object as HTTP response ?
   let errors = validationResult(req); 
   if (!errors.isEmpty()) {
@@ -164,8 +162,7 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does now appear to be valid').isEmail(),
-  ],
-  (req, res) => {
+  ], (req, res) => {
   // error-handling function, if any error send a JSON object as HTTP response ?
   let errors = validationResult(req); 
   if (!errors.isEmpty()) {
@@ -190,7 +187,7 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
         res.json(updatedUser);  
       }
     });
-});
+} 
 
 //8. DELETE a user by userName
 app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -249,6 +246,6 @@ app.delete('/users/:userName/movies/:movieID', passport.authenticate('jwt', {ses
 
 // Listener
 const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0',() => {
+app.listen(port,'0.0.0.0',() => {
   console.log('Listening on Port ' + port);
 });
