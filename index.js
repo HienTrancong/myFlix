@@ -1,33 +1,47 @@
 const express = require ('express'); //import express framework, with app variable to encapsulates Express functionality to app as instance
-const morgan = require ('morgan'); //express's middleware 'morgan' to log changes, using 'common' format
 const bodyParser = require('body-parser');//express's middleware 'bodyParser' to parse request bodies before handlers, parse json format
 const app = express(); 
-
-const uuid = require ('uuid'); //package to generate Universal Unique ID
-
-const {check, validationResult} = require('express-validator') //?
-
+const morgan = require ('morgan'); //express's middleware 'morgan' to log changes, using 'common' format
 const mongoose = require('mongoose'); // mongoose package
 const Models = require('./models.js'); // import models file
+const cors = require ('cors');
+const {check, validationResult} = require('express-validator') //?
+const uuid = require ('uuid'); //package to generate Universal Unique ID
+
 const Movies = Models.Movie; //import model Movie
 const Users = Models.User; //import model Users
+
+//OLD method to connect mongoose to local MongoDB
+  //mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {useNewUrlParser: true, useUnifiedTopology: true});
+
+//NEW method to connect mongoose to MongoDB Atlas database
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+// cors
+let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true})); //?
+app.use(express.static('public'));
 
-//method to connect mongoose to local MongoDB
-// mongoose.connect('mongodb://localhost:27017/myFlixMongoDB', {useNewUrlParser: true, useUnifiedTopology: true});
-
-//method to connect mongoose to MongoDB Atlas database
-mongoose.connect(process.env.CONNECTION_URI, {useNewUrlParser: true, useUnifiedTopology: true});
-
-const cors = require ('cors');
-app.use(cors());
 let auth = require('./auth')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
 require ('./passport.js'); //call passport file
-
 
 // Welcome to page
 app.get('/', (req, res) => {

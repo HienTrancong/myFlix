@@ -1,20 +1,16 @@
 //express compatible middleware 'passport' to authenticate requests, passport use plugins call strategies
 const passport = require('passport');
-
 //define variable stratefy of basic HTTP autehntication 
 //local strategy take usename & password from request body, and use mongoose to check for user with same username (password is not checked here)
 const LocalStrategy = require('passport-local').Strategy;
-
 //import user model
 const Models = require('./models.js');
-
 //define variable strategy for authenticating with JSON web token, used in RESTful endpoints without sessions.
 const passportJWT = require('passport-jwt');
 
-
-let Users = Models.User;
-let JWTStrategy = passportJWT.Strategy; 
-let ExtractJWT = passportJWT.ExtractJwt; 
+let Users = Models.User,
+    JWTStrategy = passportJWT.Strategy,
+    ExtractJWT = passportJWT.ExtractJwt; 
 
 //default parameters usernameField; passwordField
 //the fields define the name of properties in POST body sent to server
