@@ -130,7 +130,7 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
  //back-end validation logic ?
 app.post('/users',
   [
-    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username is required, with at least 5 characters').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does now appear to be valid').isEmail(),
@@ -176,7 +176,7 @@ app.post('/users',
 app.put('/users/:Username', passport.authenticate('jwt', {session: false}),
   //back-end validation logic ?
   [
-    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username is required, with at least 5 characters').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does now appear to be valid').isEmail(),
