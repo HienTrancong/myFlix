@@ -5,7 +5,7 @@ const morgan = require ('morgan'); //express's middleware 'morgan' to log change
 const mongoose = require('mongoose'); // mongoose package
 const Models = require('./models.js'); // import models file
 const cors = require ('cors');
-const {check, validationResult} = require('express-validator') //?
+const {check, validationResult} = require('express-validator'); //?
 const uuid = require ('uuid'); //package to generate Universal Unique ID
 
 const Movies = Models.Movie; //import model Movie
