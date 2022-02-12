@@ -23,18 +23,16 @@ mongoose.connect(process.env.CONNECTION_URI, {
 // cors
 let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
-        let message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
-        return callback(new Error(message), false);
-      }
-      return callback(null, true);
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
+      let message = 'The CORS policy for this application does not allow access from origin ' + origin;
+      return callback(new Error(message), false);
     }
-  })
-);
+    return callback(null, true);
+  }
+}));
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
@@ -175,7 +173,7 @@ app.post('/users',
  Email: String,(required)
  Birthday: Date
 */
- app.put('/users/:Username', 
+app.put('/users/:Username', passport.authenticate('jwt', {session: false});
   //back-end validation logic ?
   [
     check('Username', 'Username is required').isLength({min: 5}),
@@ -184,12 +182,11 @@ app.post('/users',
     check('Email', 'Email does now appear to be valid').isEmail(),
   ], (req, res) => {
   // error-handling function, if any error send a JSON object as HTTP response ?
-  let errors = validationResult(req); 
-  if (!errors.isEmpty()) {
-    return res.status(422).json({error: errors.array()});
-  }
- passport.authenticate('jwt', {session: false}), (req, res) => {
-  Users.findOneAndUpdate(
+    let errors = validationResult(req); 
+    if (!errors.isEmpty()) {
+      return res.status(422).json({error: errors.array()});
+    }
+    Users.findOneAndUpdate(
     {Username: req.params.Username }, 
     {$set: {
       Username: req.body.Username,
@@ -207,7 +204,7 @@ app.post('/users',
         res.json(updatedUser);  
       }
     });
-} 
+});
 
 //8. DELETE a user by userName
 app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
