@@ -181,7 +181,7 @@ app.put('/users/:Username', passport.authenticate('jwt', {session: false}),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does now appear to be valid').isEmail(),
   ], (req, res) => {
-  // error-handling function, if any error send a JSON object as HTTP response ?
+  // error-handling function, if any error send a JSON object as HTTP response
     let errors = validationResult(req); 
     if (!errors.isEmpty()) {
       return res.status(422).json({error: errors.array()});
