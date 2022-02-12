@@ -257,6 +257,12 @@ app.delete('/users/:userName/movies/:movieID', passport.authenticate('jwt', {ses
     });
 });
 
+//Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+});
+
 // Listener
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
