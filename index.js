@@ -5,7 +5,7 @@ const morgan = require ('morgan'); //express's middleware 'morgan' to log change
 const mongoose = require('mongoose'); // mongoose package
 const Models = require('./models.js'); // import models file
 const cors = require ('cors');
-const {check, validationResult} = require('express-validator'); //?
+const { check, validationResult } = require('express-validator'); //?
 const uuid = require ('uuid'); //package to generate Universal Unique ID
 
 const Movies = Models.Movie; //import model Movie
@@ -23,25 +23,27 @@ mongoose.connect(process.env.CONNECTION_URI, {
 // cors
 let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
-      return callback(new Error(message), false);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if(!origin) return callback(null, true);
+      if(allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
+        let message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
+        return callback(new Error(message), false);
+      }
+      return callback(null, true);
     }
-    return callback(null, true);
-  }
-}));
+  })
+);
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true})); //?
 app.use(express.static('public'));
 
-let auth = require('./auth')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
+let auth = require('./auth.js')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
-require ('./passport.js'); //call passport file
+require('./passport.js'); //call passport file
 
 // Welcome to page
 app.get('/', (req, res) => {
