@@ -6,7 +6,7 @@ const mongoose = require('mongoose'); // mongoose package
 const Models = require('./models.js'); // import models file
 const cors = require ('cors');
 const { check, validationResult } = require('express-validator'); //?
-// const uuid = require ('uuid'); //package to generate Universal Unique ID
+const uuid = require ('uuid'); //package to generate Universal Unique ID
 
 const Movies = Models.Movie; //import model Movie
 const Users = Models.User; //import model Users
@@ -36,8 +36,8 @@ app.use(cors({
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: true})); // test not using
-// app.use(express.static('public')); // test not using
+app.use(bodyParser.urlencoded({extended: true})); 
+app.use(express.static('public')); 
 
 let auth = require('./auth.js')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
@@ -48,10 +48,10 @@ app.get('/', (req, res) => {
   res.send('Welcome to my app!');
 });
 
-// Documentation Test not using
-// app.get('/documentation', (req, res) => {
-//   res.sendFile('/public/documentation.html', {root:__dirname})
-// });
+//Documentation
+app.get('/documentation', (req, res) => {
+  res.sendFile('/public/documentation.html', {root:__dirname})
+});
 
 //1. GET list of all movies
 app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) => {
