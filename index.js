@@ -26,8 +26,8 @@ let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://te
 app.use(
   cors({
     origin: (origin, callback) => {
-      if(!origin) return callback(null, true);
-      if(allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
         let message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
         return callback(new Error(message), false);
       }
@@ -38,8 +38,8 @@ app.use(
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true})); //?
-app.use(express.static('public'));
+// app.use(bodyParser.urlencoded({extended: true})); // test not using
+// app.use(express.static('public')); // test not using
 
 let auth = require('./auth.js')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
@@ -50,14 +50,15 @@ app.get('/', (req, res) => {
   res.send('Welcome to my app!');
 });
 
-// Documentation
-app.get('/documentation',(req, res) => {
-  res.sendFile('/public/documentation.html', {root:__dirname})
-});
+// Documentation Test not using
+// app.get('/documentation', (req, res) => {
+//   res.sendFile('/public/documentation.html', {root:__dirname})
+// });
 
 //1. GET list of all movies
 app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Movies.find()
+  Movies
+    .find()
     .then((movies) => {
       res.status(201).json(movies);
     })
@@ -69,50 +70,54 @@ app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) =>
 
 //2. GET data about a movie by title
 app.get('/movies/:title', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Movies.findOne({Title: req.params.title })
-  .then ((movie) => {
-    res.json(movie);
-  })
-  .catch ((err) => {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  });
+  Movies
+    .findOne({Title: req.params.title })
+    .then ((movie) => {
+      res.json(movie);
+    })
+    .catch ((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 //3. GET data about a genre by genreName
 app.get('/genre/:genreName', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Movies.findOne({'Genre.Name': req.params.genreName })
-  .then ((movie) => {
-    res.json(movie.Genre);
-  })
-  .catch ((err) => {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  });
+  Movies
+    .findOne({'Genre.Name': req.params.genreName })
+    .then ((movie) => {
+      res.json(movie.Genre);
+    })
+    .catch ((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 //4. GET data about a director by name
 app.get('/director/:directorName', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Movies.findOne({'Director.Name': req.params.directorName })
-  .then ((movie) => {
-    res.json(movie.Director);
-  })
-  .catch ((err) => {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  });
+  Movies
+    .findOne({'Director.Name': req.params.directorName })
+    .then ((movie) => {
+      res.json(movie.Director);
+    })
+    .catch ((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 //5. GET list of all users
 app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Users.find()
-  .then((users) => {
-    res.status(201).json(users);
-  })
-  .catch((err)=> {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  });
+  Users
+    .find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err)=> {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 //6. ADD new user
@@ -124,8 +129,8 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
   //   Birthday: Date
   // }
 
- app.post('/users',
-  //back-end validation logic ?
+ //back-end validation logic ?
+app.post('/users',
   [
     check('Username', 'Username is required').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
@@ -133,33 +138,35 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
     check('Email', 'Email does now appear to be valid').isEmail(),
   ], (req, res) => {
   // error-handling function, if any error send a JSON object as HTTP response ?
-  let errors = validationResult(req); 
-  if (!errors.isEmpty()) {
-    return res.status(422).json({error: errors.array()});
-  }
-  let hashedPassword = Users.hashPassword(req.body.Password); //hash password entered by user before storing in MongoDB
-  Users.findOne({ Username: req.body.Username }) //Search to see if user with requested username already exists
-  .then((user) => {
-    if (user) { 
-      return res.status(400).send(req.body.Username + 'already exist');
-    } else { Users.create({
-        Username: req.body.Username, 
-        Password: hashedPassword,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday
-        })
-      .then((user) => {res.status(201).json(user)})
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send('Error: ' + error);
-      }) 
+    let errors = validationResult(req); 
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
-  }) 
-  .catch((error) => {
-    console.error(Error);
-    res.status(500).send('Error: ' + error);
-  });
- });
+    let hashedPassword = Users.hashPassword(req.body.Password); //hash password entered by user before storing in MongoDB
+    Users.findOne({ Username: req.body.Username }) //Search to see if user with requested username already exists
+      .then((user) => {
+        if (user) { 
+          return res.status(400).send(req.body.Username + 'already exist');
+        } else { 
+          Users
+            .create({
+              Username: req.body.Username, 
+              Password: hashedPassword,
+              Email: req.body.Email,
+              Birthday: req.body.Birthday
+            })
+            .then((user) => { res.status(201).json(user) })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Error: ' + error);
+            });
+        }
+      }) 
+    .catch((error) => {
+      console.error(Error);
+      res.status(500).send('Error: ' + error);
+    });
+});
 
 //7. Update user information by username
 /*
@@ -268,3 +275,5 @@ const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
   console.log('Listening on Port ' + port);
 });
+
+
