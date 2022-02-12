@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt'); //Node.js moduleto hash password
 
 // Define Schema for Movies collection
 let movieSchema = mongoose.Schema({
-    // _id: {type: String, required: true},
     Title: {type: String, required: true},
     Description: {type: String, required: true},
     Genre: {
