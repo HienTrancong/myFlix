@@ -1,11 +1,11 @@
-const express = require ('express'); //import express framework, with app variable to encapsulates Express functionality to app as instance
+const express = require ('express'); //import express framework
 const bodyParser = require('body-parser');//express's middleware 'bodyParser' to parse request bodies before handlers, parse json format
-const app = express(); 
+const app = express(); //App variable to encapsulates Express functionality to app as instance
 const morgan = require ('morgan'); //express's middleware 'morgan' to log changes, using 'common' format
 const mongoose = require('mongoose'); // mongoose package
 const Models = require('./models.js'); // import models file
-const cors = require ('cors');
-const { check, validationResult } = require('express-validator'); //?
+const cors = require ('cors'); // node.js package for cross origin resouce sharing
+const { check, validationResult } = require('express-validator'); //JS library for validation in back-end
 const uuid = require ('uuid'); //package to generate Universal Unique ID
 
 const Movies = Models.Movie; //import model Movie
@@ -20,7 +20,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
   useUnifiedTopology: true
 });
 
-// cors
+//CORS
 let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
 
 app.use(cors({
@@ -34,10 +34,10 @@ app.use(cors({
   }
 }));
 
-app.use(morgan('common'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true})); 
-app.use(express.static('public')); 
+app.use(morgan('common')); // morgan using 'common' format
+app.use(bodyParser.json()); //parse parse JSON into JS variables
+app.use(bodyParser.urlencoded({extended: true})); //parse URL-encoded requests, extended: true for values of any type iso just string
+app.use(express.static('public')); //Express built-in middle ware to serve static file from a directory
 
 let auth = require('./auth.js')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
@@ -106,7 +106,7 @@ app.get('/director/:directorName', passport.authenticate('jwt', {session: false}
 });
 
 //5. GET list of all users
-app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => { //Json-Web-Token euthentication calling from auth.js
   Users
     .find()
     .then((users) => {
@@ -119,15 +119,15 @@ app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => 
 });
 
 //6. ADD new user
-  // Expect JSON in this format
-  // {
-  //   Username: String,
-  //   Password: String,
-  //   Email: String,
-  //   Birthday: Date
-  // }
-
- //back-end validation logic ?
+  /*Expect JSON in this format
+  {
+  Username: String, (required)
+  Password: String,(required)
+  Email: String,(required)
+  Birthday: Date
+  }
+  */
+ //back-end validation logic
 app.post('/users',
   [
     check('Username', 'Username is required, with at least 5 characters').isLength({min: 5}),
@@ -135,7 +135,7 @@ app.post('/users',
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does now appear to be valid').isEmail(),
   ], (req, res) => {
-  // error-handling function, if any error send a JSON object as HTTP response ?
+    // error-handling function, if any error send a JSON object as HTTP response
     let errors = validationResult(req); 
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
@@ -166,7 +166,7 @@ app.post('/users',
     });
 });
 
-//7. Update user information by username
+//7. UPDATE user information by username
 /*
  Username: String, (required)
  Password: String,(required)
