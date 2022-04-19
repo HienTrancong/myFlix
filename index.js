@@ -105,6 +105,23 @@ app.get('/director/:directorName', passport.authenticate('jwt', {session: false}
     });
 });
 
+// GET data of a single user by name
+app.get('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
+  Users
+  .findOne({Username: req.params.Username})
+  .then((user) => {
+    if(user) {
+      res.status(200).json(user);
+    } else {
+      res.status(400).send('User with username' + req.params.Username + ' is not found');
+    };
+  })
+  .catch ((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
+});
+
 //5. GET list of all users
 app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => { //Json-Web-Token euthentication calling from auth.js
   Users
