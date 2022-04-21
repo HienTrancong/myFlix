@@ -21,7 +21,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 });
 
 //CORS
-let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
+let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com','https://www.cinemaclock.com'];
 
 app.use(cors({
   origin: (origin, callback) => {
