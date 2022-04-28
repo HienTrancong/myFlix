@@ -207,11 +207,12 @@ app.put('/users/:Username', passport.authenticate('jwt', {session: false}),
     if (!errors.isEmpty()) {
       return res.status(422).json({error: errors.array()});
     }
+    let hashedPassword = Users.hashPassword(req.body.Password); //hash password entered by user before storing in MongoDB
     Users.findOneAndUpdate(
     {Username: req.params.Username }, 
     {$set: {
       Username: req.body.Username,
-      Password: req.body.Password,
+      Password: hashedPassword,
       Email: req.body.Email,
       Birthday: req.body.Birthday
       }
