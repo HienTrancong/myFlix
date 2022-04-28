@@ -35,8 +35,7 @@ app.use(cors({
 }));
 */
 var corsOptions = {
-  origin: '*',
-  credentials: true
+  origin: '*'
 };
 
 app.use(cors(corsOptions));
