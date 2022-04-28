@@ -36,7 +36,6 @@ app.use(cors({
 }));
 */
 
-
 app.use(cors());
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
