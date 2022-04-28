@@ -22,8 +22,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 
 //CORS
 /*
-let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com','https://www.cinemaclock.com'];
-
+let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
@@ -37,6 +36,12 @@ app.use(cors({
 */
 
 app.use(cors());
+
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
