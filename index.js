@@ -34,14 +34,12 @@ app.use(cors({
   }
 }));
 */
+var corsOptions = {
+  origin: '*',
+  credentials: true
+};
 
-app.use(cors());
-
-app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
+app.use(cors(corsOptions));
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
