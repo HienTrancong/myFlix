@@ -22,7 +22,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 });
 
 //CORS
-/*
+
 let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
 app.use(cors({
   origin: (origin, callback) => {
@@ -34,9 +34,9 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-*/
 
-app.use(cors());
+
+// app.use(cors());
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
