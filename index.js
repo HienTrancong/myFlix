@@ -8,6 +8,7 @@ const cors = require ('cors'); // node.js package for cross origin resouce shari
 const { check, validationResult } = require('express-validator'); //JS library for validation in back-end
 const uuid = require ('uuid'); //package to generate Universal Unique ID
 
+
 const Movies = Models.Movie; //import model Movie
 const Users = Models.User; //import model Users
 
@@ -34,12 +35,9 @@ app.use(cors({
   }
 }));
 */
-var corsOptions = {
-  origin: '*'
-};
 
-app.use(cors(corsOptions));
 
+app.use(cors());
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
 app.use(bodyParser.urlencoded({extended: true})); //parse URL-encoded requests, extended: true for values of any type iso just string
