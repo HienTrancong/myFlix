@@ -37,6 +37,7 @@ app.use(cors({
 */
 
 app.use(cors());
+
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
 app.use(bodyParser.urlencoded({extended: true})); //parse URL-encoded requests, extended: true for values of any type iso just string
