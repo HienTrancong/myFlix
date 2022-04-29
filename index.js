@@ -59,7 +59,7 @@ app.all('*', function(req, res, next) {
 
 // Welcome to page
 app.get('/', (req, res) => {
-  res.set('Access-Control-Allow-Origin','*');
+  res.header('Access-Control-Allow-Origin','*');
   res.send('Welcome to my app!');
 });
 
