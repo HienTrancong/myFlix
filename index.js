@@ -36,7 +36,9 @@ app.use(cors({
 }));
 */
 
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
@@ -47,19 +49,8 @@ let auth = require('./auth.js')(app); //call 'auth.js' file, 'app' argument ensu
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
 require('./passport.js'); //call passport file
 
-/*
-app.all('*', function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
-*/
-
 // Welcome to page
 app.get('/', (req, res) => {
-  res.header('Access-Control-Allow-Origin','*');
   res.send('Welcome to my app!');
 });
 
@@ -70,7 +61,6 @@ app.get('/documentation', (req, res) => {
 
 //1. GET list of all movies
 app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) => {
-  res.header('Access-Control-Allow-Origin','*');
   Movies
     .find()
     .then((movies) => {
@@ -84,7 +74,6 @@ app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) =>
 
 //2. GET data about a movie by title
 app.get('/movies/:title', passport.authenticate('jwt', {session: false}), (req, res) => {
-  res.header('Access-Control-Allow-Origin','*');
   Movies
     .findOne({Title: req.params.title })
     .then ((movie) => {
