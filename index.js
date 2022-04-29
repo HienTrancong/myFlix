@@ -22,7 +22,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 });
 
 //CORS
-
+/*
 let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
 app.use(cors({
   origin: (origin, callback) => {
@@ -34,9 +34,9 @@ app.use(cors({
     return callback(null, true);
   }
 }));
+*/
 
-
-// app.use(cors());
+app.use(cors());
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
@@ -46,7 +46,7 @@ app.use(express.static('public')); //Express built-in middle ware to serve stati
 let auth = require('./auth.js')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
 require('./passport.js'); //call passport file
-
+/*
 app.all('*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', true);
@@ -54,7 +54,7 @@ app.all('*', function(req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
-
+*/
 // Welcome to page
 app.get('/', (req, res) => {
   res.send('Welcome to my app!');
