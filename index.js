@@ -46,7 +46,7 @@ app.use(express.static('public')); //Express built-in middle ware to serve stati
 let auth = require('./auth.js')(app); //call 'auth.js' file, 'app' argument ensures Express is available in auth.js as well
 const passport =  require('passport'); //express compatible middle ware 'passport' to authenticate requests
 require('./passport.js'); //call passport file
-/*
+
 app.all('*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', true);
@@ -54,7 +54,7 @@ app.all('*', function(req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
-*/
+
 // Welcome to page
 app.get('/', (req, res) => {
   res.send('Welcome to my app!');
