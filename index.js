@@ -4,7 +4,7 @@ const app = express(); //App variable to encapsulates Express functionality to a
 const morgan = require ('morgan'); //express's middleware 'morgan' to log changes, using 'common' format
 const mongoose = require('mongoose'); // mongoose package
 const Models = require('./models.js'); // import models file
-const cors = require ('cors'); // node.js package for cross origin resouce sharing
+//const cors = require ('cors'); // node.js package for cross origin resouce sharing
 const { check, validationResult } = require('express-validator'); //JS library for validation in back-end
 const uuid = require ('uuid'); //package to generate Universal Unique ID
 
@@ -36,9 +36,9 @@ app.use(cors({
 }));
 */
 
-app.use(cors({
-  origin: '*'
-}));
+// app.use(cors({
+//   origin: '*'
+// }));
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
