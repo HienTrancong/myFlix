@@ -36,9 +36,7 @@ app.use(cors({
 }));
 */
 
-app.use(cors({
-  origin: '*'
-}));
+app.use(cors({ credentials: true, origin: true }));
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
