@@ -70,7 +70,6 @@ app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) =>
     .find()
     .then((movies) => {
       res.status(201).json(movies);
-      res.header('Access-Control-Allow-Origin', '*');
     })
     .catch((err)=> {
       console.error(err);
@@ -84,7 +83,6 @@ app.get('/movies/:title', passport.authenticate('jwt', {session: false}), (req, 
     .findOne({Title: req.params.title })
     .then ((movie) => {
       res.json(movie);
-      res.header('Access-Control-Allow-Origin', '*');
     })
     .catch ((err) => {
       console.error(err);
