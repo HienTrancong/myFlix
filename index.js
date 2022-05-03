@@ -22,7 +22,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 });
 
 //CORS
-
+/*
 let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'http://testsite.com',
   'http://cinemaclock.com'];
 app.use(cors({
@@ -35,24 +35,23 @@ app.use(cors({
     return callback(null, true);
   }
 }));
+*/
 
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+  optionSuccessStatus: 200
+}
 
-// const corsOptions = {
-//   origin: "*",
-//   credentials: true,
-//   optionSuccessStatus: 200
-// }
+app.use(cors(corsOptions));
 
-// app.use(cors(corsOptions));
-
-// app.use(function (req, res, next) {
-//   res.header('Access-Control-Allow-Origin', "*");
-//   res.header('Access-Control-Allow-Headers', true);
-//   res.header('Access-Control-Allow-Credentials', true);
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//   next();
-// });
-
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Headers', true);
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  next();
+});
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
