@@ -22,35 +22,36 @@ mongoose.connect(process.env.CONNECTION_URI, {
 });
 
 //CORS
-/*
-let allowedOrigins = ['http://localhost:8080','http://localhost:1234','http://testsite.com'];
+
+let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'http://testsite.com',
+  'http://cinemaclock.com'];
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
+    if (allowedOrigins.indexOf(origin) === -1) { //If a specific origin isn't found on the list of allowed origins
       let message = 'The CORS policy for this application does not allow access from origin ' + origin;
       return callback(new Error(message), false);
     }
     return callback(null, true);
   }
 }));
-*/
 
-const corsOptions = {
-  origin: "*",
-  credentials: true,
-  optionSuccessStatus: 200
-}
 
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: "*",
+//   credentials: true,
+//   optionSuccessStatus: 200
+// }
 
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', "*");
-  res.header('Access-Control-Allow-Headers', true);
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  next();
-});
+// app.use(cors(corsOptions));
+
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', "*");
+//   res.header('Access-Control-Allow-Headers', true);
+//   res.header('Access-Control-Allow-Credentials', true);
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   next();
+// });
 
 
 app.use(morgan('common')); // morgan using 'common' format
