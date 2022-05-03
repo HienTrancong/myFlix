@@ -36,14 +36,22 @@ app.use(cors({
 }));
 */
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:1234',
+  credentials: true,
+  optionSuccessStatus: 200
+}
 
-app.use(function(req, res, next) {  
-  res.header("Access-Control-Allow-Headers","*");
+app.use(cors(corsOptions));
+
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Headers', true);
   res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  next(); 
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  next();
 });
+
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
