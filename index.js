@@ -37,7 +37,7 @@ app.use(cors({
 */
 
 const corsOptions = {
-  origin: true,
+  origin: "*",
   credentials: true,
   optionSuccessStatus: 200
 }
