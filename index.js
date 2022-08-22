@@ -22,9 +22,9 @@ mongoose.connect(process.env.CONNECTION_URI, {
 });
 
 //CORS
-/*
-let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'http://testsite.com',
-  'http://cinemaclock.com'];
+
+let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'http://testsite.com', 'http://cinemaclock.com'];
+
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
@@ -35,15 +35,15 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-*/
 
-const corsOptions = {
-  origin: "*",
-  credentials: true,
-  optionSuccessStatus: 200
-}
 
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: "*",
+//   credentials: true,
+//   optionSuccessStatus: 200
+// }
+
+// app.use(cors(corsOptions));
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', "*");
