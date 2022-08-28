@@ -44,7 +44,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 
 // app.use(cors(corsOptions));
 
-const cors = require('cors');
+// const cors = require('cors');
 app.use(cors());
 
 app.use(function (req, res, next) {
