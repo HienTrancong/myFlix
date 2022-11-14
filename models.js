@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt'); //Node.js moduleto hash password
 
 // Define Schema for Movies collection
 let movieSchema = mongoose.Schema({
-    Title: {type: String, required: true},
-    Description: {type: String, required: true},
+    Title: { type: String, required: true },
+    Description: { type: String, required: true },
     Genre: {
         Name: String,
         Description: String
@@ -23,11 +23,11 @@ let movieSchema = mongoose.Schema({
 // Define Schema for Users collection
 //by default Mongoose adds an _id property to the schema
 let userSchema = mongoose.Schema({
-    Username: {type: String, required: true},
-    Password: {type: String, required: true},
-    Email: {type: String, required: true},
+    Username: { type: String, required: true },
+    Password: { type: String, required: true },
+    Email: { type: String, required: true },
     Birthday: Date,
-    FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie'}]
+    FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
 
 //function to hash password
@@ -37,8 +37,7 @@ userSchema.statics.hashPassword = (password) => {
 
 //function to compare submitted password with hashed password stored in the database
 // no arrow function (for instance methods), this refer to actual user document rather than .methods
-userSchema.methods.validatePassword = function(password) 
-{
+userSchema.methods.validatePassword = function (password) {
     return bcrypt.compareSync(password, this.Password);
 };
 
