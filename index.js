@@ -17,18 +17,25 @@ mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
+//------------------------------------- CORS before change 0701
+//CORS
+// app.use(cors());
 
+//CORS allow all origins for all HTTP methods
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', "*");
+//   res.header('Access-Control-Allow-Headers', true);
+//   res.header('Access-Control-Allow-Credentials', true);
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   next();
+// });
+//------------------------------------- CORS before change 0701
+
+//------------------------------------- CORS after change 0701
 //CORS
 app.use(cors());
 
-//CORS allow all origins for all HTTP methods
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', "*");
-  res.header('Access-Control-Allow-Headers', true);
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  next();
-});
+//------------------------------------- CORS after change 0701
 
 app.use(morgan('common')); // morgan using 'common' format
 app.use(bodyParser.json()); //parse parse JSON into JS variables
@@ -66,7 +73,8 @@ app.get('/documentation', (req, res) => {
  * @returns array of all movies
  * @requires passport
  */
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+//app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', (req, res) => {
   Movies
     .find()
     .then((movies) => {
