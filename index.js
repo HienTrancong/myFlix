@@ -68,7 +68,7 @@ app.get('/documentation', (req, res) => {
 /**CRUD */
 
 // Get list of all movies
-/**
+/** 
  * GET: list of all movies
  * @returns array of all movies
  * @requires passport
